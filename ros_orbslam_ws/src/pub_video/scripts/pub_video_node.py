@@ -9,7 +9,7 @@ def image_publisher():
     pub = rospy.Publisher('/fisheye/raw', Image, queue_size=10)
     bridge = CvBridge()
     rate = rospy.Rate(30)
-    cap = cv2.VideoCapture('/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/video/ORBSLAM3.mp4')
+    cap = cv2.VideoCapture('src/video/ORBSLAM3.mp4')
 
     while not rospy.is_shutdown():
         ret, frame = cap.read()

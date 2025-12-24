@@ -1,0 +1,89 @@
+# 编译产物
+build/
+*/build/
+*.o
+*.so
+*.a
+*.dylib
+*.dll
+*.exe
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+!*Config.cmake
+!*-config.cmake
+
+# ROS
+ros_orbslam_ws/build/
+ros_orbslam_ws/devel/
+ros_orbslam_ws/install/
+ros_orbslam_ws/.catkin_workspace
+ros_orbslam_ws/src/CMakeLists.txt
+
+# 第三方库构建文件
+Thirdparty/*/build/
+Thirdparty/*/lib/*.so
+Thirdparty/*/lib/*.a
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 日志和临时文件
+*.log
+*.tmp
+*.bak
+*.orig
+
+# 点云文件
+*.ply
+*.pcd
+pointCloud/
+
+# 轨迹文件
+*Trajectory*.txt
+KeyFrameTrajectory.txt
+CameraTrajectory.txt
+
+# 词汇表文件（通常很大）
+# Vocabulary/
+
+# 模型权重文件（通常很大）
+*.pth
+*.pt
+*.onnx
+*.pb
+
+# 输出目录
+vis_depth/
+output/
+results/
+
+# ROS 特定
+*.bag
+*.bag.active
+
+# 原子配置临时文件
+ros_orbslam_ws/build/atomic_configure/
+
+# CMake 锁文件
+cmake.lock

@@ -4,9 +4,15 @@ import glob
 import matplotlib
 import numpy as np
 import os
+import sys
 import torch
 import open3d as o3d
 import pypose as pp
+
+# 添加当前脚本目录到 Python 路径
+script_dir = os.path.dirname(os.path.abspath(__file__))
+if script_dir not in sys.path:
+    sys.path.insert(0, script_dir)
 
 from depth_anything_v2.dpt import DepthAnythingV2
 import rospy
@@ -32,7 +38,7 @@ class Img2DepthMaping:
         self.input_size = 518
         self.outdir = './vis_depth'
         self.encoder = 'vitb' # choices=['vits', 'vitb', 'vitl', 'vitg']
-        self.load_from = "/home/yxj/Hightorque_vision/Depth-Anything-V2/metric_depth/checkpoints/depth_anything_v2_metric_hypersim_vitb.pth"
+        self.load_from = "/home/sunteng/Downloads/depth_anything_v2_metric_hypersim_vitb.pth"
         self.max_depth = 70.0
         
         self.SAVE = False
@@ -88,11 +94,27 @@ class Img2DepthMaping:
         self.now_pose = pp.SE3(torch.tensor([0., 0., 0., 0., 0., 0., 1.])) # 初始化T
 
         # ************************ 点云查看器 ********************** #
-        self.vis = o3d.visualization.VisualizerWithKeyCallback()
-        self.vis.create_window(window_name="point cloud", width=1280, height=960)
-        self.all_point_cloud = o3d.geometry.PointCloud()
-        self.vis.add_geometry(self.all_point_cloud)
-        self.reset_view = True # 是否第一帧
+        # 添加可视化开关，避免 GLX 错误
+        self.enable_visualization = rospy.get_param('~enable_visualization', True)
+        
+        if self.enable_visualization:
+            try:
+                self.vis = o3d.visualization.VisualizerWithKeyCallback()
+                self.vis.create_window(window_name="point cloud", width=1280, height=960, visible=True)
+                self.all_point_cloud = o3d.geometry.PointCloud()
+                self.vis.add_geometry(self.all_point_cloud)
+                self.reset_view = True # 是否第一帧
+                rospy.loginfo("Open3D 可视化窗口已启用")
+            except Exception as e:
+                rospy.logwarn(f"无法创建 Open3D 可视化窗口: {e}")
+                rospy.logwarn("将禁用可视化功能，仅发布点云话题")
+                self.enable_visualization = False
+                self.all_point_cloud = o3d.geometry.PointCloud()
+                self.reset_view = True
+        else:
+            rospy.loginfo("Open3D 可视化已禁用（通过参数设置）")
+            self.all_point_cloud = o3d.geometry.PointCloud()
+            self.reset_view = True
 
         self.points_with_color = np.array([], dtype=[('x', np.float32), ('y', np.float32), ('z', np.float32)])
         # ************************ planer ********************** #
@@ -133,12 +155,17 @@ class Img2DepthMaping:
         if self.is_needed_pose(T_pp_inv_new):
             point_cloud = self.npy_depth_to_point_cloud(depth_npy, self.fx, self.fy, self.cx, self.cy, T_pp_inv_new, depth_scale=1.0, rgb_image=undistorted_frame)
             self.all_point_cloud += point_cloud
-            self.vis.update_geometry(self.all_point_cloud)
-
-            # 如果是第一帧，重置视角
-            if self.reset_view:
-                self.vis.reset_view_point(True)
-                self.reset_view = False
+            
+            # 只在可视化启用时更新窗口
+            if self.enable_visualization:
+                try:
+                    self.vis.update_geometry(self.all_point_cloud)
+                    # 如果是第一帧，重置视角
+                    if self.reset_view:
+                        self.vis.reset_view_point(True)
+                        self.reset_view = False
+                except Exception as e:
+                    rospy.logwarn_once(f"更新可视化失败: {e}")
 
             print("\n******************* this is the needed pose! ********************\n")
             cv2.imshow(f"depth_maping_node_image",undistorted_frame)
@@ -149,9 +176,13 @@ class Img2DepthMaping:
         self.pcl_pub.publish(all_pointCloud_pc2)
         # self.rate.sleep()
 
-        # 渲染
-        self.vis.poll_events()
-        self.vis.update_renderer()
+        # 渲染（仅在可视化启用时）
+        if self.enable_visualization:
+            try:
+                self.vis.poll_events()
+                self.vis.update_renderer()
+            except Exception as e:
+                rospy.logwarn_throttle(10, f"渲染失败: {e}")
 
 
     def npy_depth_to_point_cloud(self,depth_map_npy, fx, fy, cx, cy, T_pp, depth_scale=1.0, rgb_image:cv2.Mat=None):
@@ -330,8 +361,26 @@ class Img2DepthMaping:
 
 if __name__ == "__main__":
     rospy.init_node("depth_maping_node")
-    i2d = Img2DepthMaping()
-    rospy.loginfo("Img to maping...")
-    rospy.spin()
-    o3d.io.write_point_cloud("/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/depth_maping/pointCloud/HT_vslam.ply", i2d.all_point_cloud)
-    o3d.visualization.draw_geometries([i2d.all_point_cloud])
+    
+    try:
+        i2d = Img2DepthMaping()
+        rospy.loginfo("Img to maping...")
+        rospy.spin()
+    except KeyboardInterrupt:
+        rospy.loginfo("正在关闭节点...")
+    finally:
+        # 保存点云
+        try:
+            output_path = os.path.join(script_dir, "pointCloud/HT_vslam.ply")
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+            o3d.io.write_point_cloud(output_path, i2d.all_point_cloud)
+            rospy.loginfo(f"点云已保存到: {output_path}")
+        except Exception as e:
+            rospy.logwarn(f"保存点云失败: {e}")
+        
+        # 仅在可视化启用时显示最终点云
+        if i2d.enable_visualization:
+            try:
+                o3d.visualization.draw_geometries([i2d.all_point_cloud])
+            except Exception as e:
+                rospy.logwarn(f"显示最终点云失败: {e}")
