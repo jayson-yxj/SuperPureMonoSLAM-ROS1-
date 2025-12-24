@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src
+CMAKE_SOURCE_DIR = /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build
+CMAKE_BINARY_DIR = /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build
 
 # Utility rule file for doxygen.
 
@@ -67,6 +67,6 @@ CMakeFiles/doxygen.dir/clean:
 .PHONY : CMakeFiles/doxygen.dir/clean
 
 CMakeFiles/doxygen.dir/depend:
-	cd /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/CMakeFiles/doxygen.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/CMakeFiles/doxygen.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/doxygen.dir/depend
 

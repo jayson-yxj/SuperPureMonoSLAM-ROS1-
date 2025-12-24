@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src
+CMAKE_SOURCE_DIR = /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build
+CMAKE_BINARY_DIR = /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build
 
 # Utility rule file for orb_slam3_ros_gennodejs.
 
@@ -63,10 +63,10 @@ ORB_SLAM3_ROS/CMakeFiles/orb_slam3_ros_gennodejs.dir/build: orb_slam3_ros_gennod
 .PHONY : ORB_SLAM3_ROS/CMakeFiles/orb_slam3_ros_gennodejs.dir/build
 
 ORB_SLAM3_ROS/CMakeFiles/orb_slam3_ros_gennodejs.dir/clean:
-	cd /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/ORB_SLAM3_ROS && $(CMAKE_COMMAND) -P CMakeFiles/orb_slam3_ros_gennodejs.dir/cmake_clean.cmake
+	cd /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/ORB_SLAM3_ROS && $(CMAKE_COMMAND) -P CMakeFiles/orb_slam3_ros_gennodejs.dir/cmake_clean.cmake
 .PHONY : ORB_SLAM3_ROS/CMakeFiles/orb_slam3_ros_gennodejs.dir/clean
 
 ORB_SLAM3_ROS/CMakeFiles/orb_slam3_ros_gennodejs.dir/depend:
-	cd /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/ORB_SLAM3_ROS /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/ORB_SLAM3_ROS /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/ORB_SLAM3_ROS/CMakeFiles/orb_slam3_ros_gennodejs.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/ORB_SLAM3_ROS /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/ORB_SLAM3_ROS /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/ORB_SLAM3_ROS/CMakeFiles/orb_slam3_ros_gennodejs.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : ORB_SLAM3_ROS/CMakeFiles/orb_slam3_ros_gennodejs.dir/depend
 

@@ -4,12 +4,12 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/DBoW2/DBoW2/BowVector.cpp" "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir/DBoW2/BowVector.cpp.o"
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/DBoW2/DBoW2/FORB.cpp" "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir/DBoW2/FORB.cpp.o"
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/DBoW2/DBoW2/FeatureVector.cpp" "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir/DBoW2/FeatureVector.cpp.o"
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/DBoW2/DBoW2/ScoringObject.cpp" "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir/DBoW2/ScoringObject.cpp.o"
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/DBoW2/DUtils/Random.cpp" "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir/DUtils/Random.cpp.o"
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/DBoW2/DUtils/Timestamp.cpp" "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir/DUtils/Timestamp.cpp.o"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/DBoW2/DBoW2/BowVector.cpp" "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir/DBoW2/BowVector.cpp.o"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/DBoW2/DBoW2/FORB.cpp" "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir/DBoW2/FORB.cpp.o"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/DBoW2/DBoW2/FeatureVector.cpp" "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir/DBoW2/FeatureVector.cpp.o"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/DBoW2/DBoW2/ScoringObject.cpp" "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir/DBoW2/ScoringObject.cpp.o"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/DBoW2/DUtils/Random.cpp" "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir/DUtils/Random.cpp.o"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/DBoW2/DUtils/Timestamp.cpp" "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/DBoW2/build/CMakeFiles/DBoW2.dir/DUtils/Timestamp.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

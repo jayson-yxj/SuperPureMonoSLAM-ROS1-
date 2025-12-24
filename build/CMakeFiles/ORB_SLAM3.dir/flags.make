@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_FLAGS =  -Wall   -O3 -std=c++11 -O3 -DNDEBUG -march=native -fPIC   -Wno-error=ignored-qualifiers -Wno-error=sign-compare -Wno-error=deprecated-copy -Wno-error=missing-field-initializers -Wno-error=pessimizing-move -std=gnu++14
 
-CXX_DEFINES = -DCOMPILEDWITHC11 -DHAVE_EIGEN -DHAVE_EPOXY -DORB_SLAM3_EXPORTS -DPANGO_DEFAULT_WIN_URI=\"x11\" -D_LINUX_
+CXX_DEFINES = -DCOMPILEDWITHC11 -DELPP_NO_DEFAULT_LOG_FILE -DHAVE_EIGEN -DHAVE_EPOXY -DORB_SLAM3_EXPORTS -DPANGO_DEFAULT_WIN_URI=\"wayland\" -D_LINUX_
 
-CXX_INCLUDES = -I/home/yxj/Hightorque_vision/orbslam_depthmaping_ros -I/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/include -I/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/include/CameraModels -I/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/Sophus -isystem /usr/include/eigen3 -isystem /usr/include/opencv4 
+CXX_INCLUDES = -I/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2 -I/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/include -I/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/include/CameraModels -I/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/Sophus -I/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ORB_SLAM3 -isystem /usr/include/eigen3 -isystem /usr/include/opencv4 
 

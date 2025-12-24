@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/g2o/g2o/stuff/os_specific.c
+/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/g2o/g2o/stuff/os_specific.c
 os_specific.h
-/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/g2o/g2o/stuff/os_specific.h
+/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/g2o/g2o/stuff/os_specific.h
 
-/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/g2o/g2o/stuff/os_specific.h
+/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/g2o/g2o/stuff/os_specific.h
 stdio.h
 -
 stdlib.h

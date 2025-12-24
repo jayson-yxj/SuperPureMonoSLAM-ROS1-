@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src
+CMAKE_SOURCE_DIR = /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build
+CMAKE_BINARY_DIR = /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build
 
 # Utility rule file for geometry_msgs_generate_messages_lisp.
 
@@ -63,10 +63,10 @@ depth_maping/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build: geometry
 .PHONY : depth_maping/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build
 
 depth_maping/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/clean:
-	cd /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/depth_maping && $(CMAKE_COMMAND) -P CMakeFiles/geometry_msgs_generate_messages_lisp.dir/cmake_clean.cmake
+	cd /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/depth_maping && $(CMAKE_COMMAND) -P CMakeFiles/geometry_msgs_generate_messages_lisp.dir/cmake_clean.cmake
 .PHONY : depth_maping/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/clean
 
 depth_maping/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/depend:
-	cd /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/depth_maping /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/depth_maping /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/depth_maping/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/depth_maping /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/depth_maping /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/depth_maping/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : depth_maping/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/depend
 

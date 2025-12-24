@@ -279,20 +279,15 @@ struct Printer< ::orb_slam3_ros::ImagePose_<ContainerAllocator> >
 {
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::orb_slam3_ros::ImagePose_<ContainerAllocator>& v)
   {
-    if (false || !indent.empty())
-      s << std::endl;
     s << indent << "header: ";
+    s << std::endl;
     Printer< ::std_msgs::Header_<ContainerAllocator> >::stream(s, indent + "  ", v.header);
-    if (true || !indent.empty())
-      s << std::endl;
     s << indent << "image: ";
+    s << std::endl;
     Printer< ::sensor_msgs::Image_<ContainerAllocator> >::stream(s, indent + "  ", v.image);
-    if (true || !indent.empty())
-      s << std::endl;
     s << indent << "pose: ";
+    s << std::endl;
     Printer< ::geometry_msgs::Pose_<ContainerAllocator> >::stream(s, indent + "  ", v.pose);
-    if (true || !indent.empty())
-      s << std::endl;
     s << indent << "tracking_success: ";
     Printer<uint8_t>::stream(s, indent + "  ", v.tracking_success);
   }

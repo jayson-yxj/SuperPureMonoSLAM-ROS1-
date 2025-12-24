@@ -1,8 +1,8 @@
-# Install script for directory: /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/ORB_SLAM3_ROS
+# Install script for directory: /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/ORB_SLAM3_ROS
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/install")
+  set(CMAKE_INSTALL_PREFIX "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,53 +38,53 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/orb_slam3_ros/msg" TYPE FILE FILES "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/ORB_SLAM3_ROS/msg/ImagePose.msg")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/orb_slam3_ros/msg" TYPE FILE FILES "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/ORB_SLAM3_ROS/msg/ImagePose.msg")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/orb_slam3_ros/cmake" TYPE FILE FILES "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/ORB_SLAM3_ROS/catkin_generated/installspace/orb_slam3_ros-msg-paths.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/orb_slam3_ros/cmake" TYPE FILE FILES "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/ORB_SLAM3_ROS/catkin_generated/installspace/orb_slam3_ros-msg-paths.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/devel/include/orb_slam3_ros")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/devel/include/orb_slam3_ros")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/roseus/ros" TYPE DIRECTORY FILES "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/devel/share/roseus/ros/orb_slam3_ros")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/roseus/ros" TYPE DIRECTORY FILES "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/devel/share/roseus/ros/orb_slam3_ros")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/common-lisp/ros" TYPE DIRECTORY FILES "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/devel/share/common-lisp/ros/orb_slam3_ros")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/common-lisp/ros" TYPE DIRECTORY FILES "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/devel/share/common-lisp/ros/orb_slam3_ros")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gennodejs/ros" TYPE DIRECTORY FILES "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/devel/share/gennodejs/ros/orb_slam3_ros")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gennodejs/ros" TYPE DIRECTORY FILES "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/devel/share/gennodejs/ros/orb_slam3_ros")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  execute_process(COMMAND "/usr/bin/python3" -m compileall "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/devel/lib/python3/dist-packages/orb_slam3_ros")
+  execute_process(COMMAND "/usr/bin/python3" -m compileall "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/devel/lib/python3/dist-packages/orb_slam3_ros")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages" TYPE DIRECTORY FILES "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/devel/lib/python3/dist-packages/orb_slam3_ros")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages" TYPE DIRECTORY FILES "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/devel/lib/python3/dist-packages/orb_slam3_ros")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/ORB_SLAM3_ROS/catkin_generated/installspace/orb_slam3_ros.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/ORB_SLAM3_ROS/catkin_generated/installspace/orb_slam3_ros.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/orb_slam3_ros/cmake" TYPE FILE FILES "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/ORB_SLAM3_ROS/catkin_generated/installspace/orb_slam3_ros-msg-extras.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/orb_slam3_ros/cmake" TYPE FILE FILES "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/ORB_SLAM3_ROS/catkin_generated/installspace/orb_slam3_ros-msg-extras.cmake")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/orb_slam3_ros/cmake" TYPE FILE FILES
-    "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/ORB_SLAM3_ROS/catkin_generated/installspace/orb_slam3_rosConfig.cmake"
-    "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/ORB_SLAM3_ROS/catkin_generated/installspace/orb_slam3_rosConfig-version.cmake"
+    "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/ORB_SLAM3_ROS/catkin_generated/installspace/orb_slam3_rosConfig.cmake"
+    "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/ORB_SLAM3_ROS/catkin_generated/installspace/orb_slam3_rosConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/orb_slam3_ros" TYPE FILE FILES "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/ORB_SLAM3_ROS/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/orb_slam3_ros" TYPE FILE FILES "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/ORB_SLAM3_ROS/package.xml")
 endif()
 

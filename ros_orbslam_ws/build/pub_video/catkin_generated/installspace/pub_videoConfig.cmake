@@ -67,14 +67,14 @@ set(pub_video_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(pub_video_SOURCE_PREFIX /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/pub_video)
-  set(pub_video_DEVEL_PREFIX /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/devel)
+  set(pub_video_SOURCE_PREFIX /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/pub_video)
+  set(pub_video_DEVEL_PREFIX /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/devel)
   set(pub_video_INSTALL_PREFIX "")
   set(pub_video_PREFIX ${pub_video_DEVEL_PREFIX})
 else()
   set(pub_video_SOURCE_PREFIX "")
   set(pub_video_DEVEL_PREFIX "")
-  set(pub_video_INSTALL_PREFIX /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/install)
+  set(pub_video_INSTALL_PREFIX /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/install)
   set(pub_video_PREFIX ${pub_video_INSTALL_PREFIX})
 endif()
 
@@ -118,7 +118,7 @@ endif()
 
 set(libraries "")
 foreach(library ${libraries})
-  # keep build configuration keywords, generator expressions, target names, and absolute libraries as-is
+  # keep build configuration keywords, target names and absolute libraries as-is
   if("${library}" MATCHES "^(debug|optimized|general)$")
     list(APPEND pub_video_LIBRARIES ${library})
   elseif(${library} MATCHES "^-l")
@@ -146,8 +146,6 @@ foreach(library ${libraries})
       target_link_options("${interface_target_name}" INTERFACE "${library}")
     endif()
     list(APPEND pub_video_LIBRARIES "${interface_target_name}")
-  elseif(${library} MATCHES "^\\$<")
-    list(APPEND pub_video_LIBRARIES ${library})
   elseif(TARGET ${library})
     list(APPEND pub_video_LIBRARIES ${library})
   elseif(IS_ABSOLUTE ${library})
@@ -156,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/install/lib;/opt/ros/noetic/lib)
+    foreach(path /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/install/lib;/home/sunteng/zed_ws/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

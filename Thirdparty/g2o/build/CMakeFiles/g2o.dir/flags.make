@@ -7,11 +7,11 @@ C_FLAGS =   -Wall -W -O3 -DNDEBUG -O3 -march=native -fPIC
 
 C_DEFINES = -DUNIX -Dg2o_EXPORTS
 
-C_INCLUDES = -I/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/g2o/core -I/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/g2o/types -I/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/g2o/stuff -I/usr/include/eigen3 
+C_INCLUDES = -I/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/g2o/core -I/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/g2o/types -I/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/g2o/stuff -I/usr/include/eigen3 
 
 CXX_FLAGS =   -Wall -W -O3 -DNDEBUG -O3 -march=native -fPIC  
 
 CXX_DEFINES = -DUNIX -Dg2o_EXPORTS
 
-CXX_INCLUDES = -I/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/g2o/core -I/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/g2o/types -I/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/g2o/stuff -I/usr/include/eigen3 
+CXX_INCLUDES = -I/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/g2o/core -I/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/g2o/types -I/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/g2o/stuff -I/usr/include/eigen3 
 

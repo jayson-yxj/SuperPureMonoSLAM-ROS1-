@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/devel/include/depth_maping/ImagePose.h"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/devel/include/depth_maping/ImagePose.h"
   "CMakeFiles/depth_maping_generate_messages_cpp"
 )
 

@@ -1,8 +1,8 @@
-# Install script for directory: /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/pub_video
+# Install script for directory: /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/pub_video
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/install")
+  set(CMAKE_INSTALL_PREFIX "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,21 +38,21 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/pub_video/catkin_generated/installspace/pub_video.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/pub_video/catkin_generated/installspace/pub_video.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/pub_video/cmake" TYPE FILE FILES
-    "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/pub_video/catkin_generated/installspace/pub_videoConfig.cmake"
-    "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/pub_video/catkin_generated/installspace/pub_videoConfig-version.cmake"
+    "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/pub_video/catkin_generated/installspace/pub_videoConfig.cmake"
+    "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/pub_video/catkin_generated/installspace/pub_videoConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/pub_video" TYPE FILE FILES "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/pub_video/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/pub_video" TYPE FILE FILES "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/pub_video/package.xml")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pub_video" TYPE PROGRAM FILES "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/pub_video/catkin_generated/installspace/pub_video_node.py")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pub_video" TYPE PROGRAM FILES "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/pub_video/catkin_generated/installspace/pub_video_node.py")
 endif()
 

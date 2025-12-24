@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/ORB_SLAM3_ROS/src/ros_mono.cc" "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/build/ORB_SLAM3_ROS/CMakeFiles/orb_mono.dir/src/ros_mono.cc.o"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/ORB_SLAM3_ROS/src/ros_mono.cc" "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/build/ORB_SLAM3_ROS/CMakeFiles/orb_mono.dir/src/ros_mono.cc.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -12,7 +12,7 @@ set(CMAKE_CXX_COMPILER_ID "GNU")
 set(CMAKE_TARGET_DEFINITIONS_CXX
   "HAVE_EIGEN"
   "HAVE_EPOXY"
-  "PANGO_DEFAULT_WIN_URI=\"x11\""
+  "PANGO_DEFAULT_WIN_URI=\"wayland\""
   "ROSCONSOLE_BACKEND_LOG4CXX"
   "ROS_BUILD_SHARED_LIBS=1"
   "ROS_PACKAGE_NAME=\"orb_slam3_ros\""
@@ -21,14 +21,14 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/devel/include"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/devel/include"
   "/opt/ros/noetic/include"
   "/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/ORB_SLAM3_ROS"
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/ORB_SLAM3_ROS/../../.."
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/ORB_SLAM3_ROS/../../../include"
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/ORB_SLAM3_ROS/../../../include/CameraModels"
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/src/ORB_SLAM3_ROS/../../../Thirdparty/Sophus"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/ORB_SLAM3_ROS"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/ORB_SLAM3_ROS/../../.."
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/ORB_SLAM3_ROS/../../../include"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/ORB_SLAM3_ROS/../../../include/CameraModels"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/ORB_SLAM3_ROS/../../../Thirdparty/Sophus"
   "/usr/include/opencv4"
   "/usr/include/eigen3"
   )

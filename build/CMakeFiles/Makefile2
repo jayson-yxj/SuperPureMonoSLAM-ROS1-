@@ -44,10 +44,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/yxj/Hightorque_vision/orbslam_depthmaping_ros
+CMAKE_SOURCE_DIR = /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/build
+CMAKE_BINARY_DIR = /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -94,14 +94,14 @@ Thirdparty/g2o/clean: Thirdparty/g2o/CMakeFiles/g2o.dir/clean
 CMakeFiles/ORB_SLAM3.dir/all:
 	$(MAKE) -f CMakeFiles/ORB_SLAM3.dir/build.make CMakeFiles/ORB_SLAM3.dir/depend
 	$(MAKE) -f CMakeFiles/ORB_SLAM3.dir/build.make CMakeFiles/ORB_SLAM3.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29 "Built target ORB_SLAM3"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29 "Built target ORB_SLAM3"
 .PHONY : CMakeFiles/ORB_SLAM3.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/ORB_SLAM3.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/build/CMakeFiles 29
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/build/CMakeFiles 29
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ORB_SLAM3.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/build/CMakeFiles 0
 .PHONY : CMakeFiles/ORB_SLAM3.dir/rule
 
 # Convenience name for target.
@@ -121,14 +121,14 @@ CMakeFiles/ORB_SLAM3.dir/clean:
 Thirdparty/g2o/CMakeFiles/g2o.dir/all:
 	$(MAKE) -f Thirdparty/g2o/CMakeFiles/g2o.dir/build.make Thirdparty/g2o/CMakeFiles/g2o.dir/depend
 	$(MAKE) -f Thirdparty/g2o/CMakeFiles/g2o.dir/build.make Thirdparty/g2o/CMakeFiles/g2o.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/build/CMakeFiles --progress-num=30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60 "Built target g2o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/build/CMakeFiles --progress-num=30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60 "Built target g2o"
 .PHONY : Thirdparty/g2o/CMakeFiles/g2o.dir/all
 
 # Build rule for subdir invocation for target.
 Thirdparty/g2o/CMakeFiles/g2o.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/build/CMakeFiles 31
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/build/CMakeFiles 31
 	$(MAKE) -f CMakeFiles/Makefile2 Thirdparty/g2o/CMakeFiles/g2o.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/build/CMakeFiles 0
 .PHONY : Thirdparty/g2o/CMakeFiles/g2o.dir/rule
 
 # Convenience name for target.

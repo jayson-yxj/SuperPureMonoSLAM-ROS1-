@@ -1,4 +1,4 @@
-# Install script for directory: /home/yxj/Hightorque_vision/orbslam_depthmaping_ros/Thirdparty/g2o
+# Install script for directory: /home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Thirdparty/g2o
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

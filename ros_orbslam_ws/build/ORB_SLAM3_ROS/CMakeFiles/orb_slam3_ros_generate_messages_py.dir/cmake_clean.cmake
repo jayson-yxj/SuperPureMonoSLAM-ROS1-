@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/devel/lib/python3/dist-packages/orb_slam3_ros/msg/_ImagePose.py"
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/devel/lib/python3/dist-packages/orb_slam3_ros/msg/__init__.py"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/devel/lib/python3/dist-packages/orb_slam3_ros/msg/_ImagePose.py"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/devel/lib/python3/dist-packages/orb_slam3_ros/msg/__init__.py"
   "CMakeFiles/orb_slam3_ros_generate_messages_py"
 )
 

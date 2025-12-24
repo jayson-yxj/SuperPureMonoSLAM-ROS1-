@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/devel/share/roseus/ros/orb_slam3_ros/manifest.l"
-  "/home/yxj/Hightorque_vision/orbslam_depthmaping_ros/ros_orbslam_ws/devel/share/roseus/ros/orb_slam3_ros/msg/ImagePose.l"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/devel/share/roseus/ros/orb_slam3_ros/manifest.l"
+  "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/devel/share/roseus/ros/orb_slam3_ros/msg/ImagePose.l"
   "CMakeFiles/orb_slam3_ros_generate_messages_eus"
 )
 
