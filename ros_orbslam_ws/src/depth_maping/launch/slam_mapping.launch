@@ -27,7 +27,7 @@
     <arg name="height_filter_mode" default="relative" />  <!-- 'relative' 或 'absolute' -->
     
     <!-- 相对模式参数（推荐用于单目SLAM，尺度不确定） -->
-    <arg name="height_ratio_min" default="0.4" /> 
+    <arg name="height_ratio_min" default="0.5" /> 
     <arg name="height_ratio_max" default="1.0" />  
     
     <!-- 绝对模式参数（用于已知尺度的场景，单位：米） -->
@@ -36,7 +36,7 @@
     
     <!-- 2D地图高度过滤参数（百分比模式） -->
     <arg name="map_height_ratio_min" default="0.5" /> 
-    <arg name="map_height_ratio_max" default="0.7" /> 
+    <arg name="map_height_ratio_max" default="0.6" /> 
     
     <!-- 重力估计选项 -->
     <arg name="enable_gravity_estimate" default="true" />
