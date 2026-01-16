@@ -1,0 +1,27 @@
+{
+  "image_path": "/home/sunteng/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/depth_maping/scripts/GE_information/latest_img.png",
+  "timestamp": 1768535138.5921044,
+  "frame_id": 222,
+  "R_cw": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "t_cw": [
+    0.0,
+    0.0,
+    0.0
+  ]
+}

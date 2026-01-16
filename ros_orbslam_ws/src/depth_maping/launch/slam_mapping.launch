@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- ========================================== -->
+    <!-- SLAM + 深度建图系统 Launch 文件 -->
+    <!-- 说明: 一键启动 ORB-SLAM3 + Depth Anything V2 建图系统 -->
+    <!-- ========================================== -->
+    
+    <!-- ==================== 参数配置 ==================== -->
+    
+    <!-- ORB-SLAM3 配置 -->
+    <arg name="vocabulary_path" default="$(env HOME)/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/Vocabulary/ORBvoc.txt" />
+    <arg name="config_path" default="$(env HOME)/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/MonoConfig/Fisheye.yaml" />
+    
+    <!-- 视频路径 -->
+    <arg name="video_path" default="$(env HOME)/Desktop/HighTorque_vision/orbslam_depthmaping_ros_2/ros_orbslam_ws/src/video/ORBSLAM3.mp4" />
+    
+    <!-- 可视化选项 -->
+    <arg name="enable_rviz" default="true" />
+    <arg name="enable_visualization" default="false" />
+    
+    <!-- 深度建图参数 -->
+    <arg name="enable_sliding_window" default="true" />
+    <arg name="sliding_window_size" default="3" />
+    
+    <!-- 3D点云高度过滤参数 -->
+    <arg name="enable_height_filter" default="true" />
+    <arg name="height_filter_mode" default="relative" />  <!-- 'relative' 或 'absolute' -->
+    
+    <!-- 相对模式参数（推荐用于单目SLAM，尺度不确定） -->
+    <arg name="height_ratio_min" default="0.4" /> 
+    <arg name="height_ratio_max" default="1.0" />  
+    
+    <!-- 绝对模式参数（用于已知尺度的场景，单位：米） -->
+    <arg name="height_min" default="-2.0" />
+    <arg name="height_max" default="3.0" />
+    
+    <!-- 2D地图高度过滤参数（百分比模式） -->
+    <arg name="map_height_ratio_min" default="0.5" /> 
+    <arg name="map_height_ratio_max" default="0.7" /> 
+    
+    <!-- 重力估计选项 -->
+    <arg name="enable_gravity_estimate" default="true" />
+    
+    <!-- ==================== 节点启动 ==================== -->
+    
+    <!-- 1. 视频发布节点 -->
+    <node name="pub_video_node" pkg="pub_video" type="pub_video_node.py" output="screen" respawn="false">
+        <param name="video_path" value="$(arg video_path)" />
+    </node>
+    
+    <!-- 2. ORB-SLAM3 单目 SLAM -->
+    <node name="orb_slam3_mono" pkg="orb_slam3_ros" type="orb_mono" output="screen" respawn="false" 
+          args="$(arg vocabulary_path) $(arg config_path)">
+        <remap from="/camera/image_raw" to="/fisheye/raw" />
+    </node>
+    
+    <!-- 3. Depth Mapping 节点 (Depth Anything V2 + 点云建图) -->
+    <node name="depth_maping_node" pkg="depth_maping" type="depth_maping_node.py" output="screen" respawn="false">
+        <!-- 滑动窗口参数 -->
+        <param name="enable_sliding_window" value="$(arg enable_sliding_window)" />
+        <param name="sliding_window_size" value="$(arg sliding_window_size)" />
+        
+        <!-- 3D点云高度过滤参数 -->
+        <param name="enable_height_filter" value="$(arg enable_height_filter)" />
+        <param name="height_filter_mode" value="$(arg height_filter_mode)" />
+        <param name="height_ratio_min" value="$(arg height_ratio_min)" />
+        <param name="height_ratio_max" value="$(arg height_ratio_max)" />
+        <param name="height_min" value="$(arg height_min)" />
+        <param name="height_max" value="$(arg height_max)" />
+        
+        <!-- 2D地图高度过滤参数 -->
+        <param name="map_height_ratio_min" value="$(arg map_height_ratio_min)" />
+        <param name="map_height_ratio_max" value="$(arg map_height_ratio_max)" />
+        
+        <!-- 可视化参数 -->
+        <param name="enable_visualization" value="$(arg enable_visualization)" />
+    </node>
+    
+    <!-- 4. Gravity Estimate 节点 (重力对齐) -->
+    <node if="$(arg enable_gravity_estimate)" name="gravity_estimate" pkg="depth_maping" type="gravity_estimate_wrapper.sh"
+          output="screen" respawn="false" launch-prefix="bash -c 'sleep 3; $0 $@' " />
+    
+    <!-- 5. RViz 可视化 (可选) -->
+    <group if="$(arg enable_rviz)">
+        <node name="rviz" pkg="rviz" type="rviz" output="screen" respawn="false"
+              args="-d $(find depth_maping)/rviz/slam_mapping.rviz" />
+    </group>
+    
+    <!-- ==================== 系统信息 ==================== -->
+    <node name="system_monitor" pkg="rostopic" type="rostopic" output="screen"
+          args="hz /orb_slam3/image_pose" launch-prefix="bash -c 'sleep 5; $0 $@' " />
+    
+</launch>

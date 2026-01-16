@@ -1,6 +1,6 @@
 import argparse
+import shutil
 import cv2
-import glob
 import matplotlib
 import numpy as np
 import os
@@ -8,6 +8,11 @@ import sys
 import torch
 import open3d as o3d
 import pypose as pp
+import sensor_msgs.point_cloud2 as pc2
+import rospy
+import std_msgs.msg
+import json
+import yaml
 
 # 添加当前脚本目录到 Python 路径
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -15,7 +20,6 @@ if script_dir not in sys.path:
     sys.path.insert(0, script_dir)
 
 from depth_anything_v2.dpt import DepthAnythingV2
-import rospy
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 
@@ -23,12 +27,14 @@ from depth_maping.msg import ImagePose
 from scipy.spatial.transform import Rotation as R
 
 from sensor_msgs.msg import PointCloud2, PointField
-import sensor_msgs.point_cloud2 as pc2
 from std_msgs.msg import Header
 
-from plan_path import InteractivePathPlanner
-
 from sklearn.linear_model import RANSACRegressor # 用于平面拟合
+
+# ROS OccupancyGrid
+from nav_msgs.msg import OccupancyGrid
+from geometry_msgs.msg import Pose
+
 '''
 indoor  outdoor
 '''
@@ -37,7 +43,8 @@ class Img2DepthMaping:
     def __init__(self):
         self.parser = argparse.ArgumentParser(description='Depth Anything V2 Metric Depth Estimation')
         
-        self.input_size = 518
+        # 🔥 优化：进一步降低深度估计分辨率（518 -> 392 -> 256）
+        self.input_size = 256  # choices=[256, 384, 512, 640]
         self.outdir = './vis_depth'
         self.encoder = 'vitb' # choices=['vits', 'vitb', 'vitl', 'vitg']
         self.load_from = "/home/sunteng/Downloads/depth_anything_v2_metric_hypersim_vitb.pth"
@@ -47,7 +54,21 @@ class Img2DepthMaping:
         self.save_numpy = False
         self.pred_only = True
         self.grayscale = True
+
+        # 是否为第一帧
+        self.is_first_frame = True
+        # 当前文件绝对路径
+        self.current_file_path = os.path.abspath(__file__)
+        # 当前文件目录
+        self.current_dir = os.path.dirname(self.current_file_path)
         
+        # 重力估计相关
+        self.last_gravity_estimate_time = 0
+        self.gravity_estimate_interval = 1.0  # 每秒保存一次
+        self.R_align = None  # 重力对齐矩阵
+        self.last_R_align_load_time = 0
+        self.R_align_check_interval = 0.5  # 每0.5秒检查一次R_align更新
+
         # *************************************************************** #
         self.fx = 138.54264656
         self.fy = 138.60053687
@@ -82,19 +103,27 @@ class Img2DepthMaping:
         # 平移向量的尺度倍率
         self.translation_size = 18
 
+        # 裁剪深度图的最大深度值（单位：米）
+        self.cut_depth = 35.0  
+
         self.filenames = []
         self.pose_files = []
 
         # *********************** ros Sub & Pub ************************* #
         self.bridge = CvBridge()
-        self.image_pose = rospy.Subscriber("/orb_slam3/image_pose",ImagePose,self.depth_solver,queue_size=10)
+        # 增加 queue_size 避免消息丢失和延迟累积
+        self.image_pose = rospy.Subscriber("/orb_slam3/image_pose",ImagePose,self.depth_solver,queue_size=100)
         
         self.rate = rospy.Rate(10)
         self.pcl_pub = rospy.Publisher('/o3d_pointCloud',PointCloud2,queue_size=10)
         
-        # 发布深度图给 Octomap Mapping 节点
-        self.depth_pub = rospy.Publisher('/depth_anything/depth_image', Image, queue_size=10)
-        rospy.loginfo("深度图发布器已初始化: /depth_anything/depth_image")
+        # 时间戳诊断
+        self.last_msg_time = None
+        self.processing_times = []
+        
+        # 发布深度图
+        # self.depth_pub = rospy.Publisher('/depth_anything/depth_image', Image, queue_size=10)
+        # rospy.loginfo("深度图发布器已初始化: /depth_anything/depth_image")
 
         # *********************** needed pose ******************* #
         self.now_pose = pp.SE3(torch.tensor([0., 0., 0., 0., 0., 0., 1.])) # 初始化T
@@ -103,7 +132,7 @@ class Img2DepthMaping:
         # 是否启用滑动窗口模式（只显示最近N帧）
         self.enable_sliding_window = rospy.get_param('~enable_sliding_window', True)
         # 滑动窗口大小（保留最近N帧点云）
-        self.sliding_window_size = rospy.get_param('~sliding_window_size', 6)
+        self.sliding_window_size = rospy.get_param('~sliding_window_size', 3)
         # 存储每一帧的点云
         self.point_cloud_frames = []  # 列表，存储每帧的 PointCloud 对象
         
@@ -111,9 +140,44 @@ class Img2DepthMaping:
         if self.enable_sliding_window:
             rospy.loginfo(f"滑动窗口大小: {self.sliding_window_size} 帧")
 
+        # ************************ 高度过滤功能 ********************** #
+        # 是否启用高度过滤
+        self.enable_height_filter = rospy.get_param('~enable_height_filter', True)
+        # 高度过滤模式：'relative' 或 'absolute'
+        self.height_filter_mode = rospy.get_param('~height_filter_mode', 'relative')
+        
+        if self.height_filter_mode == 'relative':
+            # 相对模式：使用相机高度的百分比（适用于单目SLAM，尺度不确定）
+            self.height_ratio_min = rospy.get_param('~height_ratio_min', 0.3)  # 保留相机高度30%以上的点
+            self.height_ratio_max = rospy.get_param('~height_ratio_max', 2.0)  # 保留相机高度200%以下的点
+            rospy.loginfo(f"高度过滤: {'启用' if self.enable_height_filter else '禁用'} (相对模式)")
+            if self.enable_height_filter:
+                rospy.loginfo(f"高度比例范围: [{self.height_ratio_min:.1f}x ~ {self.height_ratio_max:.1f}x] 相机高度")
+        else:
+            # 绝对模式：使用固定米数（适用于已知尺度的场景）
+            self.height_min = rospy.get_param('~height_min', -2.0)
+            self.height_max = rospy.get_param('~height_max', 3.0)
+            rospy.loginfo(f"高度过滤: {'启用' if self.enable_height_filter else '禁用'} (绝对模式)")
+            if self.enable_height_filter:
+                rospy.loginfo(f"高度范围: [{self.height_min:.2f}m, {self.height_max:.2f}m] (Y轴)")
+
+        # **************** OccupancyGrid 地图发布器 **************** #
+        self.frame_counter = 0
+        self.map_update_interval = 1           # 每 5 帧更新一次地图（可调，5~20 都合理）
+        self.map_pub = rospy.Publisher('/projected_map', OccupancyGrid, queue_size=1, latch=True)
+        
+        # 2D地图高度过滤参数（百分比模式）
+        self.map_height_ratio_min = rospy.get_param('~map_height_ratio_min', 0.3)  # 2D地图保留最低30%以上
+        self.map_height_ratio_max = rospy.get_param('~map_height_ratio_max', 0.7)  # 2D地图保留最高70%以下
+        
+        rospy.loginfo("2D OccupancyGrid 地图发布器已初始化: /projected_map")
+        rospy.loginfo(f"2D地图高度过滤: [{self.map_height_ratio_min:.1f} ~ {self.map_height_ratio_max:.1f}] (百分比)")
+
+
         # ************************ 点云查看器 ********************** #
-        # 添加可视化开关，避免 GLX 错误
+        # 🔥 优化：默认禁用可视化以提升性能
         self.enable_visualization = rospy.get_param('~enable_visualization', False)
+        rospy.logwarn("⚠️  为提升性能，Open3D 可视化已默认禁用。如需启用，请设置 enable_visualization:=true")
         
         if self.enable_visualization:
             try:
@@ -135,8 +199,6 @@ class Img2DepthMaping:
             self.reset_view = True
 
         self.points_with_color = np.array([], dtype=[('x', np.float32), ('y', np.float32), ('z', np.float32)])
-        # ************************ planer ********************** #
-        self.planner = InteractivePathPlanner()
         
         # 添加关闭标志
         self.is_shutdown = False
@@ -145,6 +207,29 @@ class Img2DepthMaping:
         # 检查节点是否正在关闭
         if self.is_shutdown or rospy.is_shutdown():
             return
+
+        # ========== 时间戳诊断 ========== #
+        import time
+        callback_start_time = time.time()
+        
+        # 计算消息延迟
+        msg_timestamp = data.header.stamp.to_sec()
+        current_time = rospy.Time.now().to_sec()
+        msg_delay = current_time - msg_timestamp
+        
+        # 跳过延迟超过 0.1 秒的旧消息
+        if msg_delay > 0.1:
+            rospy.logwarn_throttle(1, f"⏭️  跳过旧消息（延迟 {msg_delay:.3f}s）")
+            return
+        
+        # 计算消息间隔
+        if self.last_msg_time is not None:
+            msg_interval = msg_timestamp - self.last_msg_time
+            rospy.loginfo_throttle(2, f"📊 消息延迟: {msg_delay:.3f}s | 消息间隔: {msg_interval:.3f}s ({1/msg_interval:.1f} Hz)")
+        self.last_msg_time = msg_timestamp
+        # ================================ #
+
+        self.frame_counter += 1
 
         try:
             cv_image = self.bridge.imgmsg_to_cv2(data.image, "bgr8")
@@ -161,6 +246,12 @@ class Img2DepthMaping:
                       data.pose.orientation.z,
                       data.pose.orientation.w]
         
+        
+        '''
+        ORB-SLAM3 的矩阵命名是「目标坐标系→源坐标系」（后缀 cw = Camera ← World）：
+        Tcw：World → Camera（世界到相机）；
+        Twc：Camera → World（相机到世界）；
+        '''
         T_pp = pp.SE3(torch.tensor(translation + quaternion)) # Tcw
         T_pp_inv = pp.Inv(T_pp) # Twc
 
@@ -176,20 +267,49 @@ class Img2DepthMaping:
 
         raw_image = cv_image.copy()
         undistorted_frame = cv2.remap(raw_image, self.map1, self.map2, cv2.INTER_LINEAR)
+        cv2.imshow("Undistorted Frame", undistorted_frame)
+        cv2.waitKey(1)
         
+        # 初始化 GE_information 目录
+        if self.is_first_frame:
+            self.is_first_frame = False
+            ge_info_dir = f"{self.current_dir}/GE_information"
+            if not os.path.exists(ge_info_dir):
+                os.makedirs(ge_info_dir)
+                rospy.loginfo(f"✓ 创建重力估计目录: {ge_info_dir}")
+            else:
+                rospy.loginfo(f"✓ 清空重力估计目录: {ge_info_dir}")
+                self.clear_folder(ge_info_dir)
+        
+        # 定期保存图像和位姿数据用于重力估计
+        current_time = time.time()
+        if current_time - self.last_gravity_estimate_time >= self.gravity_estimate_interval:
+            self.save_image_and_pose(undistorted_frame, T_pp, data.header.stamp.to_sec(), self.frame_counter)
+            self.last_gravity_estimate_time = current_time
+        
+        # 定期检查并加载最新的 R_align
+        if current_time - self.last_R_align_load_time >= self.R_align_check_interval:
+            self.load_R_align()
+            self.last_R_align_load_time = current_time
+        
+        # 测量深度估计时间
+        depth_start = time.time()
         depth = self.depth_anything.infer_image(undistorted_frame, self.input_size)
+        depth_time = time.time() - depth_start
         depth_npy = depth.copy()
         
+        rospy.loginfo_throttle(2, f"⏱️  深度估计耗时: {depth_time:.3f}s ({1/depth_time:.1f} FPS)")
+        
         # 发布深度图（使用与位姿相同的时间戳）
-        if not self.is_shutdown and not rospy.is_shutdown():
-            try:
-                # 将深度图转换为 ROS Image 消息（32位浮点数格式）
-                depth_msg = self.bridge.cv2_to_imgmsg(depth_npy, encoding="32FC1")
-                depth_msg.header.stamp = data.header.stamp  # 使用相同的时间戳
-                depth_msg.header.frame_id = "camera"
-                self.depth_pub.publish(depth_msg)
-            except Exception as e:
-                rospy.logwarn_throttle(5, f"发布深度图失败: {e}")
+        # if not self.is_shutdown and not rospy.is_shutdown():
+        #     try:
+        #         # 将深度图转换为 ROS Image 消息（32位浮点数格式）
+        #         depth_msg = self.bridge.cv2_to_imgmsg(depth_npy, encoding="32FC1")
+        #         depth_msg.header.stamp = data.header.stamp  # 使用相同的时间戳
+        #         depth_msg.header.frame_id = "camera"
+        #         self.depth_pub.publish(depth_msg)
+        #     except Exception as e:
+        #         rospy.logwarn_throttle(5, f"发布深度图失败: {e}")
 
         if True : # self.is_needed_pose(T_pp_inv_new,dis_range=2.,yaw_range=15.,pitch_range=15.)
             point_cloud = self.npy_depth_to_point_cloud_cut(depth_npy,
@@ -200,8 +320,54 @@ class Img2DepthMaping:
                                                             T_pp_inv_new,
                                                             depth_scale=1.0,
                                                             rgb_image=undistorted_frame,
-                                                            img_cup_size=128
+                                                            img_cup_size=128,
+                                                            voxel_size=1.0
                                                             )
+
+            # 🔥 高度过滤（在世界坐标系中过滤 Y 轴）
+            if self.enable_height_filter and len(point_cloud.points) > 0:
+                points = np.asarray(point_cloud.points)
+                colors = np.asarray(point_cloud.colors) if point_cloud.has_colors() else None
+                
+                if self.height_filter_mode == 'relative':
+                    # 相对模式：基于点云自身高度范围的百分位数过滤
+                    # 计算点云的高度范围
+                    y_min = points[:, 1].min()
+                    y_max = points[:, 1].max()
+                    y_range = y_max - y_min
+                    
+                    if y_range < 0.01:  # 避免除零
+                        rospy.logwarn_throttle(10, "点云高度范围太小，跳过过滤")
+                        height_mask = np.ones(len(points), dtype=bool)
+                    else:
+                        # ratio_min=0.3 表示过滤掉最低30%的高度范围
+                        # ratio_max=0.7 表示过滤掉最高30%的高度范围
+                        # 例如：y_range=10m, ratio_min=0.3, ratio_max=0.7
+                        #   保留范围：y_min+3m 到 y_min+7m
+                        height_min_abs = y_min + y_range * self.height_ratio_min
+                        height_max_abs = y_min + y_range * self.height_ratio_max
+                        
+                        height_mask = (points[:, 1] >= height_min_abs) & (points[:, 1] <= height_max_abs)
+                        
+                        rospy.loginfo_throttle(10, f"📏 点云高度: [{y_min:.2f}, {y_max:.2f}] 范围:{y_range:.2f} | 过滤: [{height_min_abs:.2f}, {height_max_abs:.2f}]")
+                else:
+                    # 绝对模式：使用固定高度范围
+                    height_mask = (points[:, 1] >= self.height_min) & (points[:, 1] <= self.height_max)
+                
+                filtered_points = points[height_mask]
+                
+                # 创建过滤后的点云
+                point_cloud = o3d.geometry.PointCloud()
+                point_cloud.points = o3d.utility.Vector3dVector(filtered_points)
+                
+                if colors is not None:
+                    filtered_colors = colors[height_mask]
+                    point_cloud.colors = o3d.utility.Vector3dVector(filtered_colors)
+                
+                # 统计过滤信息
+                filtered_count = len(points) - len(filtered_points)
+                if filtered_count > 0:
+                    rospy.loginfo_throttle(10, f"🔍 高度过滤: 移除 {filtered_count}/{len(points)} 点 ({filtered_count/len(points)*100:.1f}%)")
 
             # 根据滑动窗口模式更新点云
             if self.enable_sliding_window:
@@ -221,24 +387,9 @@ class Img2DepthMaping:
             else:
                 # 累积模式：持续累加所有点云
                 self.all_point_cloud += point_cloud
-            
-            # 只在可视化启用时更新窗口
-            if self.enable_visualization:
-                try:
-                    self.vis.update_geometry(self.all_point_cloud)
-                    # 如果是第一帧，重置视角
-                    if self.reset_view:
-                        self.vis.reset_view_point(True)
-                        self.reset_view = False
-                except Exception as e:
-                    rospy.logwarn_once(f"更新可视化失败: {e}")
-
-            print("\n******************* this is the needed pose! ********************\n")
-            cv2.imshow(f"depth_maping_node_image",undistorted_frame)
-            cv2.waitKey(1)
         
-        # 发送pc2点云话题
-        if not self.is_shutdown and not rospy.is_shutdown():
+        # 点云发布频率
+        if not self.is_shutdown and not rospy.is_shutdown() and self.frame_counter % 1 == 0:
             try:
                 all_pointCloud_pc2 = self.o3d_to_ros_pointCloud2(self.all_point_cloud,"map")
                 self.pcl_pub.publish(all_pointCloud_pc2)
@@ -247,13 +398,34 @@ class Img2DepthMaping:
             except Exception as e:
                 rospy.logwarn(f"点云转换失败: {e}")
 
-        # 渲染（仅在可视化启用时）
-        if self.enable_visualization and not self.is_shutdown:
+        # 地图更新频率
+        if self.frame_counter % 1 == 0:
+            occ_msg = self.project_to_2d_occupancy(
+                resolution=0.8,                              # 可调：0.02~0.1
+                height_ratio_min=self.map_height_ratio_min,  # 使用百分比
+                height_ratio_max=self.map_height_ratio_max,  # 使用百分比
+                occupied_thresh=3                           # 点数阈值，可根据密度调 3~10
+            )
+            if occ_msg is not None:
+                self.map_pub.publish(occ_msg)
+                rospy.loginfo_throttle(5, f"已发布2D Occ地图 ({occ_msg.info.width}x{occ_msg.info.height}, res={occ_msg.info.resolution}m)")
+        
+        # 渲染频率
+        if self.enable_visualization and not self.is_shutdown and self.frame_counter % 3 == 0:
             try:
                 self.vis.poll_events()
                 self.vis.update_renderer()
             except Exception as e:
                 rospy.logwarn_throttle(10, f"渲染失败: {e}")
+        
+        # 记录总处理时间
+        callback_total_time = time.time() - callback_start_time
+        self.processing_times.append(callback_total_time)
+        if len(self.processing_times) > 100:
+            self.processing_times.pop(0)
+        
+        avg_processing_time = np.mean(self.processing_times)
+        rospy.loginfo_throttle(5, f"🔧 回调总耗时: {callback_total_time:.3f}s | 平均: {avg_processing_time:.3f}s | 理论最大频率: {1/avg_processing_time:.1f} Hz")
 
 
     def npy_depth_to_point_cloud(self,depth_map_npy, fx, fy, cx, cy, T_pp, depth_scale=1.0, rgb_image=None):
@@ -297,7 +469,7 @@ class Img2DepthMaping:
         pcd = pcd.voxel_down_sample(voxel_size=0.5)
         return pcd
     
-    def npy_depth_to_point_cloud_cut(self,depth_map_npy, fx, fy, cx, cy, T_pp, depth_scale=1.0, rgb_image=None, img_cup_size=8,voxel_size=1):
+    def npy_depth_to_point_cloud_cut(self,depth_map_npy, fx, fy, cx, cy, T_pp, depth_scale=1.0, rgb_image=None, img_cup_size=8,voxel_size=2.0):
         depth_map = depth_map_npy
         hight,width = depth_map.shape
         
@@ -307,7 +479,7 @@ class Img2DepthMaping:
         u,v = np.meshgrid(np.arange(width/img_cup_size,width*(img_cup_size-1)/img_cup_size), np.arange(hight/img_cup_size,hight*(img_cup_size-1)/img_cup_size))
 
         depth_cropped = depth_map[start_y:end_y, start_x:end_x]
-        valid_mask = (depth_cropped > 0) & (depth_cropped < 30) & np.isfinite(depth_cropped)
+        valid_mask = (depth_cropped > 0) & (depth_cropped < self.cut_depth) & np.isfinite(depth_cropped)
         
         Z = depth_cropped[valid_mask] / depth_scale
         X = (u[valid_mask]-cx)*Z/fx
@@ -349,8 +521,6 @@ class Img2DepthMaping:
             pcd,voxel_size=1
         )
 
-        # self.planner.update_voxel_grid(voxel_grid_loc)
-
         return pcd
 
     def is_needed_pose(self,T,dis_range=4.,yaw_range=20.,pitch_range=20.):
@@ -380,7 +550,7 @@ class Img2DepthMaping:
         return False
 
     def o3d_to_ros_pointCloud2(self,o3d_points,image_id="odom"):
-        # points = np.asarray(o3d_points.points)
+        points = np.asarray(o3d_points.points)
         R_cam_to_ros = np.array([
             [0,  0,  1],   # ROS X = Cam Z
             [-1, 0,  0],   # ROS Y = -Cam X
@@ -389,8 +559,9 @@ class Img2DepthMaping:
 
         # points = points @ R_cam_to_ros.T
 
-        aligned_cloud, transform = self.align_map_to_ground(self.all_point_cloud)
-        points = np.asarray(aligned_cloud.points)
+        # 应用重力对齐矩阵（如果存在）
+        if self.R_align is not None:
+            points = points @ self.R_align.T
 
         # 判断点云有没有颜色
         if o3d_points.has_colors():
@@ -437,6 +608,161 @@ class Img2DepthMaping:
         pcl_msg = pc2.create_cloud(header,fields,self.points_with_color)
         return pcl_msg
     
+    def save_image_and_pose(self, image, T_pp, timestamp, frame_id):
+        """
+        保存图像和位姿数据用于重力估计（使用固定文件名，每次覆盖）
+        
+        Args:
+            image: 去畸变后的图像
+            T_pp: 位姿 (Tcw, Camera ← World)
+            timestamp: 时间戳
+            frame_id: 帧ID
+        """
+        try:
+            ge_info_dir = f"{self.current_dir}/GE_information"
+            
+            # 使用固定文件名（每次覆盖旧文件）
+            image_filename = "latest_img.png"
+            image_path = os.path.join(ge_info_dir, image_filename)
+            cv2.imwrite(image_path, image)
+            
+            # 提取位姿信息
+            # T_pp 是 Tcw (World → Camera)
+            # 我们需要 R_cw 和 t_cw
+            R_cw = T_pp.rotation().matrix().cpu().numpy()  # 3x3
+            t_cw = T_pp.translation().cpu().numpy()  # 3x1
+            
+            # 构建位姿数据
+            pose_data = {
+                'image_path': image_path,
+                'timestamp': float(timestamp),
+                'frame_id': int(frame_id),
+                'R_cw': R_cw.tolist(),
+                't_cw': t_cw.tolist()
+            }
+            
+            # 使用固定文件名保存 JSON（每次覆盖）
+            pose_filename = "latest_pose.json"
+            pose_path = os.path.join(ge_info_dir, pose_filename)
+            with open(pose_path, 'w') as f:
+                json.dump(pose_data, f, indent=2)
+            
+            rospy.loginfo_throttle(5, f"💾 已更新图像和位姿: frame_{frame_id}")
+            
+        except Exception as e:
+            rospy.logwarn(f"保存图像和位姿失败: {e}")
+    
+    def load_R_align(self):
+        """
+        加载最新的重力对齐矩阵
+        """
+        yaml_path = f"{self.current_dir}/GE_information/rotation_matrices.yaml"
+        
+        if not os.path.exists(yaml_path):
+            return
+        
+        try:
+            with open(yaml_path, 'r') as f:
+                data = yaml.safe_load(f)
+            
+            R_align_new = np.array(data['R_align'])
+            
+            # 检查是否有更新
+            if self.R_align is None or not np.allclose(R_align_new, self.R_align):
+                self.R_align = R_align_new
+                rospy.loginfo(f"✓ 已加载重力对齐矩阵 (timestamp: {data.get('timestamp', 'N/A')})")
+                
+                # 打印对齐信息
+                g_aligned = data.get('g_aligned', [0, -1, 0])
+                rospy.loginfo(f"  对齐后重力: [{g_aligned[0]:.4f}, {g_aligned[1]:.4f}, {g_aligned[2]:.4f}]")
+                
+        except Exception as e:
+            rospy.logwarn_throttle(10, f"加载重力对齐矩阵失败: {e}")
+
+
+    def project_to_2d_occupancy(self,
+                                resolution=0.05,
+                                height_ratio_min=0.3,
+                                height_ratio_max=0.7,
+                                occupied_thresh=5):
+        """
+        将当前 all_point_cloud 投影为 2D OccupancyGrid
+        使用百分比方式过滤高度
+        """
+        if len(self.all_point_cloud.points) == 0:
+            rospy.logwarn_once("点云为空，跳过生成2D地图")
+            return None
+        
+        points = np.asarray(self.all_point_cloud.points)
+        
+        # 使用百分比方式过滤高度
+        y_min = points[:, 1].min()
+        y_max = points[:, 1].max()
+        y_range = y_max - y_min
+        
+        if y_range < 0.01:
+            rospy.logwarn_once("点云高度范围太小，使用全部点生成2D地图")
+            mask = np.ones(len(points), dtype=bool)
+        else:
+            # 计算绝对高度范围
+            height_min_abs = y_min + y_range * height_ratio_min
+            height_max_abs = y_min + y_range * height_ratio_max
+            
+            mask = (points[:, 1] >= height_min_abs) & (points[:, 1] <= height_max_abs)
+            
+            rospy.loginfo_throttle(10, f"🗺️  2D地图高度过滤: [{height_min_abs:.2f}, {height_max_abs:.2f}] (范围:{y_range:.2f})")
+        
+        points_xy = np.column_stack((points[mask, 0], points[mask, 2]))  # X, Z
+        
+        if len(points_xy) < 50:
+            rospy.logwarn_once("高度范围内点太少，跳过生成地图")
+            return None
+        
+        # 计算地图边界（加1m margin）
+        x_min, y_min = points_xy.min(axis=0) - 1.0
+        x_max, y_max = points_xy.max(axis=0) + 1.0
+        
+        width = int(np.ceil((x_max - x_min) / resolution))
+        height = int(np.ceil((y_max - y_min) / resolution))
+        
+        # 计数网格
+        grid_counts = np.zeros((height, width), dtype=np.int16)
+        
+        # 向量化映射
+        ix = np.floor((points_xy[:, 0] - x_min) / resolution).astype(int)
+        iy = np.floor((points_xy[:, 1] - y_min) / resolution).astype(int)
+        
+        valid = (ix >= 0) & (ix < width) & (iy >= 0) & (iy < height)
+        ix, iy = ix[valid], iy[valid]
+        np.add.at(grid_counts, (-iy, ix), 1) # 注意 Y 轴取反 不然2d occmap会颠倒
+        
+        # 生成 occupancy 数据
+        data = np.zeros((height, width), dtype=np.int8)
+        data[grid_counts >= occupied_thresh] = 100      # occupied
+        data[(grid_counts > 0) & (grid_counts < occupied_thresh)] = -1  # unknown
+        # 其余为 0 (free)
+        
+        # ROS OccupancyGrid 要求从左下角开始，Y轴向上 → 翻转
+        data = data[::-1, :]
+        
+        # 构造消息
+        occ_msg = OccupancyGrid()
+        occ_msg.header.stamp = rospy.Time.now()
+        occ_msg.header.frame_id = "map"
+        
+        occ_msg.info.resolution = resolution
+        occ_msg.info.width = width
+        occ_msg.info.height = height
+        occ_msg.info.origin.position.x = x_min
+        occ_msg.info.origin.position.y = y_min
+        occ_msg.info.origin.position.z = 0.0
+        occ_msg.info.origin.orientation.w = 1.0
+        
+        occ_msg.data = data.flatten().tolist()
+        
+        return occ_msg
+
+
     def align_map_to_ground(self,point_cloud):
         """
         将点云对齐到地面
@@ -520,6 +846,31 @@ class Img2DepthMaping:
         # 保存变换矩阵
         # np.save("ground_alignment_transform.npy", transform)
         print("Ground alignment transform:\n", transform)
+
+    def clear_folder(self,folder_path):
+        """
+        快捷清空文件夹下的所有文件和子文件夹（保留根文件夹）
+        :param folder_path: 目标文件夹路径
+        """
+        # 先检查文件夹是否存在，避免报错
+        if not os.path.exists(folder_path):
+            print(f"文件夹 {folder_path} 不存在，无需删除")
+            return
+        
+        # 遍历并删除所有内容
+        for item in os.listdir(folder_path):
+            item_path = os.path.join(folder_path, item)
+            try:
+                # 如果是文件/链接，直接删除
+                if os.path.isfile(item_path) or os.path.islink(item_path):
+                    os.unlink(item_path)
+                # 如果是文件夹，递归删除整个文件夹（包括内容）
+                elif os.path.isdir(item_path):
+                    shutil.rmtree(item_path)
+                print(f"已删除：{item_path}")
+            except Exception as e:
+                print(f"删除失败 {item_path}：{e}")
+
 
 if __name__ == "__main__":
     rospy.init_node("depth_maping_node")

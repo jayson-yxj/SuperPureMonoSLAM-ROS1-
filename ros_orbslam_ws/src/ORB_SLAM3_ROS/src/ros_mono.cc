@@ -19,6 +19,7 @@
 #define ZED_RGB_RECT "/zedm/zed_node/rgb/image_rect_color"
 #define USB_RAW "/usb_cam/image_raw"
 #define FISHEYE_VIDEO "/fisheye/raw"
+#define GEZEBO_BOT "/camera/rgb/image_raw"
 
 using namespace std;
 
@@ -166,13 +167,16 @@ void ImageGrabber::GrabImage(const sensor_msgs::ImageConstPtr& msg)
     Tcw = mpSLAM->TrackMonocular(cv_ptr->image,cv_ptr->header.stamp.toSec());
 
     // 发布同步信息
-    auto end_time = std::chrono::steady_clock::now();
-    double time_diff = std::chrono::duration<double>(end_time - time_start).count();
-    std::cout << "time_diff: " << time_diff << std::endl;
-    if(time_diff > this->time_diff_range){
-        PublishImagePose(cv_ptr,Tcw);
-        time_start = std::chrono::steady_clock::now();
-    }
+    // auto end_time = std::chrono::steady_clock::now();
+    // double time_diff = std::chrono::duration<double>(end_time - time_start).count();
+    // std::cout << "time_diff: " << time_diff << std::endl;
+    // if(time_diff > this->time_diff_range){
+    //     PublishImagePose(cv_ptr,Tcw);
+    //     time_start = std::chrono::steady_clock::now();
+    // }
+
+    // 直接发布
+    PublishImagePose(cv_ptr,Tcw);
     
     Eigen::Matrix3f R = Tcw.matrix().block<3, 3>(0, 0);
     Eigen::Vector3f t = Tcw.matrix().block<3, 1>(0, 3);
