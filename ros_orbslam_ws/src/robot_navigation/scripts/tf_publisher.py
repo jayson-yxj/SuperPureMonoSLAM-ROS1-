@@ -100,10 +100,11 @@ class TFPublisher:
         pos_cw = T_cw[:3, 3]
         rot_cw = R.from_matrix(T_cw[:3, :3])
         
-        # 步骤3：坐标系转换 CV -> ROS
+        # 步骤3：坐标系转换 CV -> ROS（修正前进方向）
+        # 原始映射会导致前进方向偏移90°，需要调整轴映射
         T_cv_to_ros = np.array([
-            [0,  0,  1],   # ROS X = CV Z
-            [-1, 0,  0],   # ROS Y = -CV X
+            [1, 0,  0],   # ROS X = -CV X（修正前进方向）
+            [0,  0,  1],   # ROS Y = CV Z
             [0, -1,  0]    # ROS Z = -CV Y
         ])
         
@@ -257,5 +258,8 @@ if __name__ == '__main__':
     try:
         tf_pub = TFPublisher()
         rospy.spin()
+    except rospy.ROSInterruptException:
+        rospy.loginfo("TF 发布节点已关闭")
+
     except rospy.ROSInterruptException:
         rospy.loginfo("TF 发布节点已关闭")
