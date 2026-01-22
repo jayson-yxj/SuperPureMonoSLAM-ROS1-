@@ -3,7 +3,7 @@
 =======
 单目基于 ORB-SLAM3 的视觉 SLAM 系统，集成深度估计和 3D 点云重建功能。
 <img width="1906" height="1035" alt="image" src="https://github.com/user-attachments/assets/e612218b-7c36-474b-8a05-53a5cef22a38" />
-
+<img width="605" height="318" alt="image" src="https://github.com/user-attachments/assets/6fad0955-22b5-4603-9e24-cdd833b0bf23" />
 ## 📋 目录
 
 - [项目简介](#项目简介)
