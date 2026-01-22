@@ -94,3 +94,11 @@ ros_orbslam_ws/build/atomic_configure/
 
 # CMake 锁文件
 cmake.lock
+
+# 重力估计临时文件
+ros_orbslam_ws/src/depth_maping/scripts/GE_information/
+*.png
+*.json
+*.yaml
+!*config*.yaml
+!default_config.yaml
