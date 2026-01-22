@@ -13,7 +13,7 @@ def image_publisher():
     pub = rospy.Publisher('/fisheye/raw', Image, queue_size=10)
     bridge = CvBridge()
     rate = rospy.Rate(30)
-    cap = cv2.VideoCapture(VIDEO_PATH3)
+    cap = cv2.VideoCapture(VIDEO_PATH2)
 
     while not rospy.is_shutdown():
         ret, frame = cap.read()

@@ -209,7 +209,7 @@ void ImageGrabber::GrabImage(const sensor_msgs::ImageConstPtr& msg)
 
     FisheyeWarp(RGBImage, WarpImage, cv::Size(640, 480));
     // cv::imshow("ImagePoint", RGBImage);
-    cv::imshow("WarpImage", WarpImage);
+    // cv::imshow("WarpImage", WarpImage);
     if (cv::waitKey(1) == 's'){
         cout << "按压 s" <<endl;
         // 保存图片

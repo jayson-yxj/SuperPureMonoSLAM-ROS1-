@@ -12,7 +12,7 @@ depth_estimator:
   
   # 深度图预处理配置
   depth_preprocessing:
-    enabled: true  # 是否启用深度图预处理（降噪）
+    enabled: false  # 是否启用深度图预处理（降噪）
     kernel_size: 5  # 滤波核大小
     threshold: 0.07  # 梯度阈值
 
@@ -50,7 +50,7 @@ map:
   
   # 2D地图生成参数
   resolution: 0.8  # 网格分辨率（米/格）
-  height_range: [0.5, 0.6]  # 高度范围（百分比或绝对值）
+  height_range: [0.4, 0.5]  # 高度范围（百分比或绝对值）
   use_ratio: true  # 是否使用百分比模式
   occupied_thresh: 3  # 占用阈值（点数）
 
